@@ -40,7 +40,7 @@ myTicket = []
 otherTickets = []
 
 
-for line in open('data/test_02.txt'):
+for line in open('data/data.txt'):
     value = line.rstrip('\n')
     if value == '':
         continue
@@ -58,7 +58,7 @@ for line in open('data/test_02.txt'):
         constraints[label] = parseIntervals(intervals)
 
     elif myTicketRead:
-        myTicket = map(int, value.split(','))
+        myTicket = list(map(int, value.split(',')))
 
     else:
         otherTickets.append(list(map(int, value.split(','))))
@@ -77,8 +77,34 @@ for ticket in otherTickets:
 fieldValues = list(zip(*validTickets))
 fieldMap = []
 for values in fieldValues:
-    fieldMap.append(findValidFields(values, constraints))
+    fieldMap.append(set(findValidFields(values, constraints)))
 
+# Future me, I'm sorry if yu are reading the next lines
 
-print(fieldMap)
-print(fieldValues)
+finalFieldMap = [''] * len(fieldMap)
+
+for i in range(len(fieldMap)):
+    lengthOneElement = ''
+    index = 0
+    for j in range(len(fieldMap)):
+        if len(fieldMap[j]) == 1:
+            lengthOneElement = list(fieldMap[j])[0]
+            index = j
+            break
+    finalFieldMap[index] = lengthOneElement
+    for element in fieldMap:
+        try:
+            element.remove(lengthOneElement)
+        except KeyError:
+            continue
+
+departures = []
+for i in range(len(finalFieldMap)):
+    if 'departure' in finalFieldMap[i]:
+        departures.append(i)
+
+total = 1
+for departure in departures:
+    total *= myTicket[departure]
+
+print(total)
