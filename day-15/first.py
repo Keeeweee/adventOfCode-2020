@@ -1,4 +1,4 @@
-with open('data/test_01.txt') as data:
+with open('data/data.txt') as data:
     calledNumbers = list(map(int, data.readline().split(',')))
 
 turn = len(calledNumbers)
